@@ -6,17 +6,28 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "lint": "vue-tsc --noEmit"
   },
   "dependencies": {
-    "vue": "^3.5.42"
+    "@vueuse/core": "^15.0.0",
+    "axios": "^1.20.0",
+    "vue": "^3.5.42",
+    "vue-virtual-scroller": "^3.0.5"
   },
   "devDependencies": {
+    "@testing-library/user-event": "^14.6.7",
+    "@testing-library/vue": "^8.1.0",
     "@types/node": "^24.13.3",
     "@vitejs/plugin-vue": "^6.0.8",
+    "@vitest/ui": "^5.0.3",
     "@vue/tsconfig": "^0.9.1",
+    "happy-dom": "^20.14.5",
     "typescript": "~6.0.2",
     "vite": "^8.3.0",
+    "vitest": "^5.0.3",
     "vue-tsc": "^3.3.11"
   }
 }
