@@ -1,0 +1,78 @@
+/**
+ * Design tokens taken from the World of Warships portal stylesheets
+ * (wows-web-static.wgcdn.co/wowsp/.../redesign/common.css and pc-browser.css):
+ * Roboto / Roboto Condensed, a dark base, gold as the primary accent, teal for
+ * interactive text, orange for warnings. Container widths follow the portal's
+ * breakpoint steps.
+ */
+:root {
+  --font-body: Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Roboto Condensed', 'Arial Narrow', var(--font-body);
+
+  /*
+   * Steel blue-grey, the family the game's own interface uses. Built around
+   * #51809e: hue 203-205 throughout, saturation 28-32%, surfaces stepped by
+   * lightness. Contrast of every text-on-surface pair is checked by
+   * `test/styles-contrast.test.ts`, so a palette edit cannot quietly drop below
+   * WCAG AA.
+   */
+
+  /* Surfaces, darkest to lightest. */
+  --surface-sunken: #22333f;
+  --surface-base: #2a3f4e;
+  --surface-raised: #334c5d;
+  --surface-overlay: #314a59;
+  --surface-hover: #416074;
+
+  --border-subtle: #456278;
+  --border-strong: #5f8299;
+
+  --text-primary: #eef3f7;
+  --text-secondary: #c7d6e2;
+  --text-muted: #a6bccb;
+
+  /* The anchor colour, and a lighter step for interactive text and focus rings. */
+  --accent-steel: #51809e;
+  --accent-steel-bright: #8fc0dd;
+
+  --accent-gold: #eec568;
+  --accent-gold-soft: #f5c974;
+  --accent-orange: #f56914;
+  --accent-red: #ec3c04;
+
+  /* Hull classes, as the port colours them. */
+  --hull-premium: #eec568;
+  --hull-special: #21c3b9;
+
+  /*
+   * Sampled from the API's own class icons: the standard and elite variants are
+   * #eeeeee, the premium variant #eebe5f, and the special variant is the same gold
+   * family. The tier numeral is coloured from these so it matches the icon beside
+   * it.
+   */
+  --hull-mark-standard: #eeeeee;
+  --hull-mark-premium: #eec568;
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+
+  --container: 1392px;
+
+  --shadow-raised: 0 2px 8px rgb(0 0 0 / 50%);
+  --shadow-overlay: 0 16px 48px rgb(0 0 0 / 70%);
+
+  --transition: 120ms ease-out;
+}
+
+@media (min-width: 1700px) {
+  :root {
+    --container: 1548px;
+  }
+}
