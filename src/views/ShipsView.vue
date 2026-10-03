@@ -131,7 +131,7 @@ onMounted(() => {
 }
 
 .ships__title {
-  font-size: 30px;
+  font-size: 24px;
 }
 
 .ships__notice {
@@ -143,9 +143,9 @@ onMounted(() => {
   color: var(--text-primary);
 }
 
-@media (max-width: 640px) {
+@media (min-width: 720px) {
   .ships__title {
-    font-size: 24px;
+    font-size: 30px;
   }
 }
 </style>

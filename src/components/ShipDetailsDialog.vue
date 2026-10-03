@@ -124,9 +124,15 @@ watch(
   min-height: 0;
 }
 
+/*
+ * Mobile first, where the dialog is full screen: the artwork takes whatever height
+ * the facts and the description leave. A short description used to leave a large
+ * empty band at the bottom of a tall phone; now that space goes to the ship.
+ */
 .details__art {
   position: relative;
-  flex: none;
+  flex: 1 1 auto;
+  min-height: 180px;
   background: var(--surface-sunken);
 }
 
@@ -147,9 +153,7 @@ watch(
   position: relative;
   display: block;
   width: 100%;
-  /* Capped so a short viewport still leaves room for the facts and description. */
-  max-height: 46dvh;
-  aspect-ratio: 16 / 9;
+  height: 100%;
   object-fit: contain;
 }
 
@@ -234,30 +238,51 @@ watch(
   background: var(--hull-special);
 }
 
+/*
+ * Mobile first: one row, however many facts there are. The values are short, so
+ * `auto-fit` with a 140px floor wrapped them for no reason at 320px.
+ */
 .details__facts {
   display: grid;
   flex: none;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: var(--space-3);
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  gap: var(--space-2);
   margin: 0;
   padding: var(--space-4);
   border-bottom: 1px solid var(--border-subtle);
 }
 
 /*
- * One row on a phone, however many facts there are. The values are short, so
- * `auto-fit` with a 140px floor wrapped them for no reason at 320px.
+ * Wide screens: the dialog is a window with a bounded height, so the description
+ * takes the remainder and the artwork returns to a fixed 16:9 frame.
  */
-@media (max-width: 640px) {
+@media (min-width: 720px) {
+  .details__art {
+    flex: none;
+  }
+
+  .details__image {
+    /* Capped so a short viewport still leaves room for the facts and description. */
+    height: auto;
+    max-height: 46dvh;
+    aspect-ratio: 16 / 9;
+  }
+
   .details__facts {
-    grid-template-columns: none;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(0, 1fr);
-    gap: var(--space-2);
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-auto-flow: row;
+    gap: var(--space-3);
   }
 
   .details__fact dd {
-    font-size: 13px;
+    font-size: 15px;
+  }
+
+  .details__description {
+    flex: 1;
+    max-height: none;
+    font-size: 14px;
   }
 }
 
@@ -271,18 +296,24 @@ watch(
 
 .details__fact dd {
   margin: var(--space-1) 0 0;
-  font-size: 15px;
+  font-size: 13px;
 }
 
-/* The only scrollable part of the dialog. */
+/*
+ * The only scrollable part of the dialog. On a phone it takes the height its text
+ * needs, up to a cap, and the artwork above absorbs the rest; the type is a step
+ * larger there because a full-screen sheet gives it the room.
+ */
 .details__description {
-  flex: 1;
+  flex: 0 1 auto;
+  max-height: 42dvh;
   min-height: 0;
   margin: 0;
   padding: var(--space-4);
   overflow-y: auto;
   color: var(--text-secondary);
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 1.65;
 }
 
 .details__description--muted {

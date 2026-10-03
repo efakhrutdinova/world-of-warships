@@ -59,14 +59,25 @@ function onClick(event: MouseEvent) {
 </template>
 
 <style scoped>
+/*
+ * Mobile first: full screen.
+ *
+ * `inset: 0` rather than `margin: 0` — a dialog is centred by auto margins, and
+ * zeroing them alone pinned it to the top edge. `dvh` follows the browser's own
+ * chrome as it hides and reappears.
+ */
 .modal {
-  width: min(960px, calc(100vw - 2 * var(--space-4)));
-  max-height: calc(100vh - 2 * var(--space-5));
+  inset: 0;
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
   padding: 0;
   /* The dialog itself never scrolls; one child does. See `.modal__body`. */
   overflow: hidden;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-md);
+  border: 0;
+  border-radius: 0;
   background: var(--surface-overlay);
   color: var(--text-primary);
   box-shadow: var(--shadow-overlay);
@@ -127,15 +138,26 @@ function onClick(event: MouseEvent) {
  * by auto margins, and zeroing them alone pinned it to the top edge. `dvh` follows
  * the browser's own chrome as it hides and reappears.
  */
-@media (max-width: 640px) {
+/*
+ * Wide screens: a window again, centred in the viewport.
+ *
+ * The insets stay at 0 and the centring comes from `margin: auto`. `inset: auto`
+ * looks like the way to undo a full-screen dialog, but it is what breaks it: the
+ * user agent centres a modal dialog by pinning all four insets to 0 and letting auto
+ * margins distribute the slack, so removing the insets left the dialog in its static
+ * position against the top-right corner. `height: fit-content` is needed for the same
+ * reason — with both block insets at 0, an `auto` height would stretch to fill.
+ */
+@media (min-width: 720px) {
   .modal {
     inset: 0;
-    width: 100vw;
-    max-width: 100vw;
-    height: 100dvh;
-    max-height: 100dvh;
-    border: 0;
-    border-radius: 0;
+    width: min(960px, calc(100vw - 2 * var(--space-4)));
+    max-width: none;
+    height: fit-content;
+    max-height: calc(100vh - 2 * var(--space-5));
+    margin: auto;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
   }
 }
 </style>

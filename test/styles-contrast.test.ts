@@ -55,7 +55,16 @@ const AA_SMALL_TEXT = 4.5
 const NON_TEXT = 3
 
 describe('palette contrast', () => {
-  const surfaces = ['surface-sunken', 'surface-base', 'surface-raised', 'surface-overlay']
+  const surfaces = [
+    'surface-sunken',
+    'surface-base',
+    'surface-raised',
+    'surface-overlay',
+    // Not a surface token but a measured one: the lightest the textured page
+    // background reaches. Text on the page background sits on this, not on
+    // `--surface-base`.
+    'page-texture-peak',
+  ]
   const bodyText = ['text-primary', 'text-secondary', 'text-muted']
 
   it.each(surfaces.flatMap((surface) => bodyText.map((text) => [text, surface] as const)))(
@@ -66,7 +75,7 @@ describe('palette contrast', () => {
   )
 
   it('interactive text is readable on the surfaces it appears on', () => {
-    for (const surface of ['surface-base', 'surface-raised']) {
+    for (const surface of ['surface-base', 'surface-raised', 'page-texture-peak']) {
       expect(contrast(token('accent-steel-bright'), token(surface))).toBeGreaterThanOrEqual(
         AA_SMALL_TEXT,
       )

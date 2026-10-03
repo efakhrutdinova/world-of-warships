@@ -17,7 +17,34 @@ html {
 
 body {
   margin: 0;
-  background: var(--surface-base);
+  /*
+   * A repeating ocean tile under a wash of the base surface.
+   *
+   * The wash sits at 84%, which is the measured floor. The tile's brightest pixel
+   * seen through it is `--page-texture-peak`, and the text that sits directly on the
+   * page background still clears WCAG AA against that colour; any lighter and the
+   * eyebrow and the muted text drop below 4.5:1.
+   *
+   * The tile itself was contrast-amplified around its median with its highlights
+   * clamped, which makes the wave pattern 2.6x more pronounced without raising what
+   * its brightest pixel composites to — the visibility is bought from the pattern,
+   * not from lightening the page.
+   *
+   * 960x480 of WebP, 16 KB, from a 987 KB PNG. It tiles, so the lost detail is
+   * invisible, and no `background-attachment: fixed` is used — that repaints the
+   * whole background on every scroll frame.
+   */
+  background-color: var(--surface-base);
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--surface-base) 84%, transparent),
+      color-mix(in srgb, var(--surface-base) 84%, transparent)
+    ),
+    url('../assets/ocean-dark-tile.webp');
+  background-repeat: repeat;
+  background-size:
+    auto,
+    960px auto;
   color: var(--text-primary);
   font-family: var(--font-body);
   font-size: 14px;

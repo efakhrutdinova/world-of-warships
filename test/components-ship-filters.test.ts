@@ -101,10 +101,13 @@ describe('ShipFilters', () => {
 describe('ShipFilters on a narrow screen', () => {
   let pinia: ReturnType<typeof createPinia>
 
-  /** Reports the mobile breakpoint as matching, the way a phone viewport would. */
+  /**
+   * Reports a phone viewport. The breakpoints are mobile-first `min-width`, so a
+   * narrow screen is the one where the query does *not* match.
+   */
   function stubNarrowViewport() {
     vi.stubGlobal('matchMedia', (query: string) => ({
-      matches: query.includes('max-width: 720px'),
+      matches: false,
       media: query,
       addEventListener: () => {},
       removeEventListener: () => {},
@@ -122,6 +125,20 @@ describe('ShipFilters on a narrow screen', () => {
   })
 
   afterEach(resetScrollLock)
+
+  it('starts open on a wide viewport, where the panel is part of the page', () => {
+    vi.stubGlobal('matchMedia', (query: string) => ({
+      matches: true,
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    }))
+    const { container } = render(ShipFilters, { global: { plugins: [pinia] } })
+
+    expect(container.querySelector('details')!.open).toBe(true)
+    // A panel that is part of the page must not lock the page.
+    expect(document.documentElement.classList.contains('has-overlay')).toBe(false)
+  })
 
   it('starts closed, so the sheet does not cover the ships on load', () => {
     const { container } = render(ShipFilters, { global: { plugins: [pinia] } })

@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import ToggleSwitch from '@/components/ui/ToggleSwitch.vue'
 import ToggleTile from '@/components/ui/ToggleTile.vue'
-import { useMediaQuery } from '@/composables/useMediaQuery'
+import { useMinWidth } from '@/composables/useMinWidth'
 import { useScrollLock } from '@/composables/useScrollLock'
 import { tierLabel } from '@/utils/roman'
 import { useCatalogStore } from '@/stores/catalog'
@@ -15,6 +15,9 @@ import { useFiltersStore } from '@/stores/filters'
  * On narrow screens the panel collapses into a native `<details>` disclosure —
  * accessible and keyboard-operable with no JavaScript breakpoint involved.
  */
+/** Matches the single layout breakpoint in the stylesheets; see styles/breakpoints.md. */
+const WIDE_BREAKPOINT = 720
+
 const catalog = useCatalogStore()
 const filters = useFiltersStore()
 
@@ -26,15 +29,15 @@ const filters = useFiltersStore()
  * filters covering the ships is the wrong first impression — so it starts closed
  * there and open on a wider screen.
  */
-const isNarrow = useMediaQuery('(max-width: 720px)').matches
-const isOpen = ref(!isNarrow.value)
+const isWide = useMinWidth(WIDE_BREAKPOINT).matches
+const isOpen = ref(isWide.value)
 
 /**
  * While the sheet covers the screen the page behind it must not scroll; the sheet
  * scrolls on its own. On a wide screen the panel is part of the page, so it takes no
  * lock.
  */
-useScrollLock(computed(() => isOpen.value && isNarrow.value))
+useScrollLock(computed(() => isOpen.value && !isWide.value))
 
 const tiers = computed(() => {
   const present = new Set(catalog.ships.map((ship) => ship.tier))
@@ -150,10 +153,28 @@ const resultLabel = computed(() => {
 </template>
 
 <style scoped>
+/*
+ * Mobile first: closed, the panel sticks to the top of the viewport, so the filters
+ * stay one tap away however far the list has been scrolled. Open, it takes the whole
+ * screen and scrolls on its own — at 320px the panel is taller than the viewport,
+ * and a full-screen sheet is the familiar shape for that.
+ */
 .filters {
+  position: sticky;
+  top: 0;
+  z-index: 20;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   background: var(--surface-raised);
+}
+
+.filters[open] {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  overflow-y: auto;
+  border-inline: 0;
+  border-radius: 0;
 }
 
 .filters__summary {
@@ -264,7 +285,6 @@ const resultLabel = computed(() => {
 
 .filters__result {
   margin: 0;
-  margin-inline-start: auto;
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
 }
@@ -287,33 +307,25 @@ const resultLabel = computed(() => {
   background: color-mix(in srgb, var(--accent-steel) 20%, transparent);
 }
 
-@media (max-width: 720px) {
-  .filters__result {
-    margin-inline-start: 0;
-  }
-
-  /*
-   * Closed, the panel sticks to the top of the viewport, so the filters are always
-   * one tap away however far the list has been scrolled. Open, it takes the whole
-   * screen and scrolls on its own — on a 320px viewport the panel is taller than
-   * the viewport, and a full-screen sheet is the familiar shape for that.
-   *
-   * Both states are plain CSS on the native <details>; no JavaScript breakpoint is
-   * involved.
-   */
+/*
+ * Wide screens: the panel stops being a sheet and becomes part of the page again.
+ */
+@media (min-width: 720px) {
   .filters {
-    position: sticky;
-    top: 0;
-    z-index: 20;
+    position: static;
+    z-index: auto;
   }
 
   .filters[open] {
-    position: fixed;
-    inset: 0;
-    z-index: 30;
-    overflow-y: auto;
-    border-radius: 0;
-    border-inline: 0;
+    position: static;
+    inset: auto;
+    overflow: visible;
+    border-inline: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+  }
+
+  .filters__result {
+    margin-inline-start: auto;
   }
 }
 </style>
