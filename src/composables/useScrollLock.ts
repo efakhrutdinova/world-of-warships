@@ -17,12 +17,12 @@ function apply() {
   document.documentElement.classList.toggle(LOCK_CLASS, holders > 0)
 }
 
-export function acquireScrollLock() {
+function acquireScrollLock() {
   holders += 1
   apply()
 }
 
-export function releaseScrollLock() {
+function releaseScrollLock() {
   if (holders === 0) return
   holders -= 1
   apply()

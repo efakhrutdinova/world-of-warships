@@ -35,7 +35,7 @@ const VEHICLE_ICONS = ['small', 'medium', 'contour'] as const
 const NATION_ICONS = ['tiny', 'small'] as const
 const TYPE_ICONS = ['default', 'normal', 'premium', 'special', 'elite'] as const
 
-export class VortexUpstreamError extends Error {
+class VortexUpstreamError extends Error {
   endpoint: string
   detail: string
 

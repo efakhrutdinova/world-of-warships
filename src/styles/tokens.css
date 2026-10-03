@@ -38,9 +38,10 @@
   --accent-steel-bright: #8fc0dd;
 
   --accent-gold: #eec568;
-  --accent-gold-soft: #f5c974;
   --accent-orange: #f56914;
-  --accent-red: #ec3c04;
+
+  /* Breakpoints: mobile-first, `min-width` only. 720px for layout, 1700px for the
+     container. See ARCHITECTURE.md section 5.6. */
 
   /* Hull classes, as the port colours them. */
   --hull-premium: #eec568;

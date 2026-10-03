@@ -17,7 +17,7 @@ That is the whole setup. No API key, no second process, no environment file.
 ```bash
 npm run build        # type-check and bundle into dist/
 npm run preview      # serve dist/ (the data proxy runs here too)
-npm run test         # 121 tests
+npm run test         # 128 tests
 npm run lint         # ESLint
 npm run typecheck    # vue-tsc
 npm run fetch:data   # refresh the committed data snapshot
@@ -54,8 +54,14 @@ virtualizes the result: about 50 cards exist in the document however far you
 scroll, while the page keeps the full height and a stable scrollbar.
 
 If vortex is unreachable the app falls back to `public/data/catalog.en.json`, a
-snapshot committed to this repository, and says so in the page. This also means a
-built `dist/` works on any static host with no backend at all.
+snapshot committed to this repository, and says so in the page.
+
+That fallback is also what a static deployment runs on. The proxy is a Vite plugin, so
+`/api/catalog` exists under `npm run dev` and `npm run preview` and nowhere else: a
+`dist/` served by any static host works, on snapshot data, with the stale-data notice
+showing. Live data in production needs the proxy ported to the host's runtime, or the
+snapshot regenerated on a schedule — `ARCHITECTURE.md` section 7 covers both. The
+browser cannot call vortex directly in any case, because vortex sends no CORS headers.
 
 ## What is where
 
@@ -69,7 +75,7 @@ src/
   types/        API shapes and the domain model, kept apart
 build/          the dev/preview proxy — a stand-in for a BFF
 scripts/        snapshot generator
-test/           121 tests, fixtures sliced from a real vortex response
+test/           128 tests, fixtures sliced from a real vortex response
 ```
 
 `ARCHITECTURE.md` explains how the pieces fit and why each decision was made.
