@@ -1,180 +1,87 @@
-# World of Warships Home Task
+# World of Warships — ship catalogue
 
+A single page listing every ship in World of Warships, filterable by nation,
+class and tier, styled after the World of Warships portal.
 
-## Features
+Built with Vue 3, TypeScript and Vite.
 
-✨ **Complete Ship Database**
-- Browse all available ships from World of Warships API
-- View detailed ship information (name, nation, type, tier)
-- Lazy-loaded ship images for optimal performance
+## Running it
 
-🔍 **Advanced Filtering**
-- Filter by ship nation (USA, USSR, Germany, Japan, Britain, France, etc.)
-- Filter by ship type (Battleship, Cruiser, Destroyer, etc.)
-- Filter by tier level (1-10)
-- Multiple selection support for each filter category
-- Quick reset button to clear all filters
+```bash
+npm install
+npm run dev          # http://localhost:5173
+```
 
-🔎 **Powerful Search**
-- Real-time search by ship name
-- Search by nation or ship type
-- Instant results as you type
-- Clear button for quick reset
+That is the whole setup. No API key, no second process, no environment file.
 
-📱 **Responsive Design**
-- Mobile-first approach
-- Works seamlessly on desktop, tablet, and mobile devices
-- Optimized grid layouts for all screen sizes
-- Touch-friendly interface
+```bash
+npm run build        # type-check and bundle into dist/
+npm run preview      # serve dist/ (the data proxy runs here too)
+npm run test         # 121 tests
+npm run lint         # ESLint
+npm run typecheck    # vue-tsc
+npm run fetch:data   # refresh the committed data snapshot
+```
 
-⚡ **Performance Optimized**
-- Lazy image loading for better initial load time
-- Data caching to minimize API calls (30-minute cache duration)
-- Virtual scrolling ready for large datasets
-- Efficient filtering and search algorithms
+## Where the data comes from
 
-🎮 **Game-like UI**
-- Dark theme inspired by World of Warships aesthetic
-- Gradient overlays and modern styling
-- Smooth animations and transitions
-- Color-coded elements (premium badge, nation indicators)
+The four vortex encyclopedia endpoints named in the assignment, read through a
+small proxy that Vite runs in development and in `preview`:
 
-🛡️ **Error Handling**
-- Graceful error messages
-- Retry mechanism for failed API calls
-- Timeout handling for API requests
-- User-friendly feedback
+```
+GET /api/catalog               ships, nations, types
+GET /api/catalog/details/:id   one ship's description and artwork
+```
 
-## Tech Stack
+The proxy exists for two measured reasons.
 
-- **Frontend Framework**: Vue 3 (Composition API)
-- **Language**: TypeScript
-- **Build Tool**: Vite
-- **HTTP Client**: Axios
-- **Testing**: Vitest, Testing Library
-- **Styling**: Scoped CSS with CSS Grid/Flexbox
+**vortex sends no CORS headers.** No `Access-Control-Allow-Origin` on any
+endpoint, so a browser cannot call it directly from any origin.
 
-## Project Structure
+**`/vehicles/` is 19,889,418 bytes and ignores `Accept-Encoding: gzip`** — every
+record carries localization for 19 languages. The proxy resolves one locale,
+drops unused icon variants, splits off the parts only the details dialog needs,
+and gzips what is left:
+
+|                              | bytes      |
+| ---------------------------- | ---------- |
+| vortex `/vehicles/`, as sent | 19,889,418 |
+| list payload, gzipped        | 161,211    |
+| one ship's details, on open  | 404        |
+
+That is a 123× reduction on the request that blocks first paint. The grid then
+virtualizes the result: about 50 cards exist in the document however far you
+scroll, while the page keeps the full height and a stable scrollbar.
+
+If vortex is unreachable the app falls back to `public/data/catalog.en.json`, a
+snapshot committed to this repository, and says so in the page. This also means a
+built `dist/` works on any static host with no backend at all.
+
+## What is where
 
 ```
 src/
-├── components/          # Vue components
-│   ├── ShipCard.vue    # Individual ship card with hover effects
-│   ├── ShipList.vue    # Main grid container with loading/error states
-│   ├── SearchBar.vue   # Search input with clear functionality
-│   └── FilterPanel.vue # Sticky filter sidebar
-├── services/           # API and data management
-│   └── wowsApi.ts      # WOWS API client with caching
-├── types/              # TypeScript interfaces
-│   └── ships.ts        # Type definitions for ships, nations, types
-├── composables/        # Vue 3 composables (reusable logic)
-│   ├── useShipFilters.ts
-│   └── useShipSearch.ts
-├── __tests__/          # Unit tests
-│   ├── services/
-│   └── composables/
-├── App.vue             # Main application component
-├── main.ts             # Application entry point
-└── style.css           # Global styles
+  api/          vortex transport, snapshot fallback, normalization
+  components/   cards, grid, filters, dialog; ui/ holds the shared primitives
+  composables/  debounce, element size, URL synchronization
+  stores/       catalog and filters (Pinia)
+  views/        ShipsView
+  types/        API shapes and the domain model, kept apart
+build/          the dev/preview proxy — a stand-in for a BFF
+scripts/        snapshot generator
+test/           121 tests, fixtures sliced from a real vortex response
 ```
 
-## Installation
+`ARCHITECTURE.md` explains how the pieces fit and why each decision was made.
 
-### Prerequisites
-- Node.js 16.x or higher
-- npm or yarn
+## Dependencies
 
-### Setup
+Four at runtime: `vue`, `vue-router`, `pinia`, `@tanstack/vue-virtual`.
 
-```bash
-# Install dependencies
-npm install
+Each is either an official part of the framework or a non-trivial algorithm.
+Everything else is the platform: the details dialog is a native `<dialog>`,
+images use native `loading="lazy"`, requests use `fetch` with
+`AbortSignal.timeout()`, responsive layout is plain CSS. Debounce and
+`ResizeObserver` are two short composables rather than a utility library.
 
-# Run development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Run tests
-npm run test
-
-# Run tests with UI
-npm run test:ui
-
-# Type check
-npm run lint
-```
-
-## Development
-
-### Running the Dev Server
-
-```bash
-npm run dev
-```
-
-The application will be available at `http://localhost:5173`
-
-### Building for Production
-
-```bash
-npm run build
-```
-
-This creates an optimized production build in the `dist/` directory.
-
-## API Data Sources
-
-The application fetches data from the following World of Warships API endpoints:
-
-- **Vehicles**: `https://vortex.worldofwarships.eu/api/encyclopedia/en/vehicles/`
-- **Nations**: `https://vortex.worldofwarships.eu/api/encyclopedia/en/nations/`
-- **Ship Types**: `https://vortex.worldofwarships.eu/api/encyclopedia/en/vehicle_types_common/`
-- **Media Path**: `https://vortex.worldofwarships.eu/api/encyclopedia/en/media_path/`
-
-All API responses are cached for 30 minutes to reduce network requests and improve performance.
-
-## Testing
-
-The project includes comprehensive unit tests for:
-- Data parsing and API client functionality
-- Filter composable logic
-- Search functionality
-
-```bash
-# Run all tests
-npm run test
-
-# Run tests in watch mode (default in dev)
-npm run test
-
-# Open test UI dashboard
-npm run test:ui
-```
-
-## Features Implementation Details
-
-### Filtering System
-The filtering system uses Vue 3's Composition API composables for clean, reusable logic:
-- `useShipFilters`: Manages filter state and computed filtered results
-- Supports multi-select for each filter category
-- Efficient filtering algorithms for large datasets
-
-### Search
-Real-time search across ship names, nations, and types:
-- Case-insensitive matching
-- Works in combination with filters
-- Instant feedback
-
-### Error Handling
-- Network errors are caught and displayed with user-friendly messages
-- Retry button allows users to attempt API calls again
-- Timeouts are set to 10 seconds per request
-
-### Performance Optimizations
-1. **API Caching**: Results cached for 30 minutes in memory
-2. **Lazy Image Loading**: `loading="lazy"` attribute on all images
-3. **CSS Grid**: Responsive grid that adapts to screen size
-4. **Computed Properties**: Vue's reactivity system ensures efficient re-renders
-
+The reasoning for each inclusion and each omission is in `ARCHITECTURE.md`.
