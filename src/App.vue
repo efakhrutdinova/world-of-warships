@@ -1,8 +1,4 @@
 <script setup lang="ts">
-/**
- * Application shell. One route, so it is little more than a skip link and the
- * outlet — the page itself carries its own heading.
- */
 </script>
 
 <template>

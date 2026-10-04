@@ -1,8 +1,6 @@
 /**
  * Normalization is where every quirk of the vortex payload is absorbed, so these
- * tests run against a fixture sliced from a real response rather than invented
- * data — the previous iteration of this project failed precisely because its
- * mock data described a schema the API does not return.
+ * tests run against a fixture sliced from a real response
  */
 import { describe, expect, it } from 'vitest'
 import {

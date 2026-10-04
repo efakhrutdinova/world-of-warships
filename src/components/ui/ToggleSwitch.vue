@@ -1,11 +1,6 @@
 <script setup lang="ts">
 /**
  * A switch for a boolean filter.
- *
- * Built on `<input type="checkbox" role="switch">`: the native control supplies
- * keyboard activation and the checked state, `role="switch"` makes a screen reader
- * announce it as on/off rather than checked/unchecked, and the track and thumb are
- * drawn from the input itself. No library, and nothing to re-implement.
  */
 const model = defineModel<boolean>({ required: true })
 defineProps<{ label: string }>()

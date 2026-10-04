@@ -1,9 +1,6 @@
 <script setup lang="ts">
 /**
  * Placeholder cards for the initial load.
- *
- * Skeletons rather than a spinner: the layout is already known, so showing its
- * shape avoids the jump that a centred spinner causes when content arrives.
  */
 withDefaults(defineProps<{ count?: number }>(), { count: 12 })
 </script>

@@ -81,8 +81,7 @@ export interface CompactShipType {
 }
 
 /**
- * The list payload. Deliberately excludes ship descriptions and large artwork:
- * together those were 52% of the bytes while only the details dialog needs them.
+ * The list payload. Deliberately excludes ship descriptions and large artwork
  */
 export interface CompactBundle {
   /** ISO timestamp; shown in the UI when running off the snapshot. */

@@ -24,11 +24,6 @@ const typeById = computed(
   () => new Map<ShipTypeId, ShipType>(catalog.types.map((type) => [type.id, type])),
 )
 
-/**
- * The open ship is local state, not a route. A dialog over the list is not a
- * separate place in the application, and keeping it out of the URL means one
- * route and no navigation on open or close.
- */
 const selectedShip = ref<Ship | null>(null)
 
 const snapshotDate = computed(() => {

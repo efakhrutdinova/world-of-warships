@@ -8,7 +8,7 @@ import './styles/base.css'
 const app = createApp(App)
 
 /**
- * Last line of defence so an unexpected render error reaches the console once,
+ * an unexpected render error reaches the console once,
  * in a readable form, instead of surfacing as a blank page.
  */
 app.config.errorHandler = (error, _instance, info) => {

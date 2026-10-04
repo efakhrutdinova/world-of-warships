@@ -1,14 +1,6 @@
 <script setup lang="ts">
 /**
  * A pressable filter tile.
- *
- * A `<button>` with `aria-pressed` is the accessible primitive for a toggle, so
- * this needs no library: screen readers announce the pressed state and keyboard
- * activation comes from the element itself. Natural tab order is kept on purpose
- * — a roving tabindex would make a long nation row harder to escape, not easier.
- *
- * `aria-label` carries the full name because some tiles show only a glyph: a tier
- * tile reads "Tier XI" rather than the bare numeral.
  */
 defineProps<{ pressed: boolean; label: string; compact?: boolean }>()
 </script>
@@ -57,8 +49,6 @@ defineProps<{ pressed: boolean; label: string; compact?: boolean }>()
   color: var(--text-primary);
 }
 
-/* Steel fill with a gold border and gold label: the port's own pairing, and it
-   keeps the label at AA contrast, which a gold-tinted fill did not. */
 .tile--on {
   border-color: var(--accent-gold);
   background: color-mix(in srgb, var(--accent-steel) 22%, var(--surface-raised));

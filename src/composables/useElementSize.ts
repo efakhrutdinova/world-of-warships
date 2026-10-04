@@ -6,13 +6,6 @@ import { onScopeDispose, ref, watch, type Ref } from 'vue'
  * The virtualized grid needs the container width to decide how many columns fit;
  * a CSS media query cannot report that number to JavaScript.
  *
- * Sizes are rounded and published only when they actually change, so a subpixel
- * jitter cannot start a reaction. Two other guards sit outside this file and
- * matter as much: callers observe an element they do not resize themselves (see
- * `ShipGrid`'s width probe), and `scrollbar-gutter: stable` in the base stylesheet
- * stops an appearing scrollbar from narrowing the container. Together they close
- * the feedback path the browser reports as "ResizeObserver loop completed with
- * undelivered notifications".
  */
 export function useElementSize(target: Ref<HTMLElement | null>) {
   const width = ref(0)

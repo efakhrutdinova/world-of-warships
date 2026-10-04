@@ -10,9 +10,6 @@
  * handler serves slices of it. Responses are cached in memory and gzipped, since
  * vortex itself sends neither caching headers nor compression.
  *
- * The per-ship route exists because a dialog needs exactly one description.
- * Serving the whole map cost 608 KB to show a single ship; one record is ~0.5 KB.
- *
  * Registered on the dev server and on `vite preview`, so a production build can
  * be reviewed without starting a second process.
  */

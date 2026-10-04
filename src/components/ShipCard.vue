@@ -8,15 +8,6 @@ import type { Nation, Ship, ShipType } from '@/types/ship'
 
 /**
  * A card is nothing but the ship's artwork.
- *
- * The artwork is 66% fully transparent, so the nation's flag sits behind it as a
- * backdrop instead of an empty panel — which is both the nation indicator and the
- * card's colour. Everything else is drawn over the image: class and tier top left,
- * the name bottom right. That removes the text rows under the image entirely, so a
- * row of cards reads as a row of ships.
- *
- * Because the information is now carried by pictures, a visually hidden line
- * repeats it as text for screen readers and for the search-result reading order.
  */
 const props = withDefaults(
   defineProps<{
@@ -33,10 +24,6 @@ const props = withDefaults(
  * The flag is the placeholder: it is one of thirteen files and is cached after the
  * first card, so it paints immediately while the ship's own artwork arrives. The
  * artwork then fades in, once.
- *
- * A spinner per card was the alternative and would have made the problem worse —
- * fifty simultaneous animations repaint every frame, which is the cost this is
- * meant to avoid.
  */
 const artUrl = computed(() => props.ship.images.small || props.ship.images.medium)
 
@@ -100,16 +87,20 @@ const description = computed(() => {
     />
 
     <!--
-      Two sources, picked by device pixel ratio. `small` is 214x126 against
-      `medium`'s 435x256 — 4.1x fewer pixels to decode for 25% more bytes, and at
-      a column width of roughly 212 CSS pixels it needs no downscaling either.
-      A 2x display asks for ~424 and gets `medium`.
+      Two candidates: `small` is 214x126 against `medium`'s 435x256 — 4.1x fewer
+      pixels to decode for 25% more bytes.
+
+      `sizes` describes how wide the card actually renders, which follows the grid's
+      own arithmetic rather than any layout breakpoint: one column below 444px, two
+      up to 656px, then three to seven as the container fills. The bands below are
+      derived from `GAP`, `MIN_COLUMN_WIDTH` and the container's 16px padding in
+      `ShipGrid` — change those and these numbers drift.
     -->
     <img
       v-if="showArt"
       :src="artUrl"
       :srcset="`${ship.images.small} 214w, ${ship.images.medium} 435w`"
-      sizes="(max-width: 640px) 45vw, 215px"
+      sizes="(min-width: 1700px) 206px, (min-width: 656px) 240px, (min-width: 444px) 45vw, calc(100vw - 32px)"
       alt=""
       class="card__ship"
       :class="{ 'card__ship--loaded': artLoaded }"
@@ -186,13 +177,6 @@ const description = computed(() => {
   opacity: 0.62;
 }
 
-/*
- * `contain`, not `cover`: the whole silhouette has to stay visible.
- *
- * No `drop-shadow` here either. A blur filter on every card is one of the most
- * expensive things to rasterize, and it was being paid for each of the ~50 cards
- * the virtualizer mounts while scrolling.
- */
 .card__ship {
   position: absolute;
   inset: 0;
@@ -258,7 +242,6 @@ const description = computed(() => {
   position: absolute;
   top: var(--space-2);
   right: var(--space-2);
-  /* Same centring as the dialog badge: padding alone left the text sitting high. */
   display: inline-flex;
   align-items: center;
   min-height: 16px;

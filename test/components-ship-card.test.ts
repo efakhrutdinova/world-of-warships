@@ -86,12 +86,19 @@ describe('ShipCard', () => {
     expect(mountCard(shipNamed('Kunming')).find('.visually-hidden').text()).toContain('supership')
   })
 
-  it('offers the small artwork to 1x screens and the large one to 2x', () => {
+  it('offers both artwork sizes and describes the card width mobile-first', () => {
     const art = mountCard(shipNamed('Preussen')).find('.card__ship')
 
     expect(art.attributes('srcset')).toMatch(/vehicle\/small\/.+ 214w/)
     expect(art.attributes('srcset')).toMatch(/vehicle\/medium\/.+ 435w/)
-    expect(art.attributes('sizes')).toContain('215px')
+
+    const sizes = art.attributes('sizes')!
+    // Narrowest case is the unconditioned default, every condition is `min-width`.
+    expect(sizes.endsWith('calc(100vw - 32px)')).toBe(true)
+    expect(sizes).not.toContain('max-width')
+    // Widest band first: `sizes` is first-match-wins, not last.
+    const widths = [...sizes.matchAll(/min-width:\s*(\d+)px/g)].map((m) => Number(m[1]))
+    expect(widths).toEqual([...widths].sort((a, b) => b - a))
   })
 
   it('hides the artwork until it loads, leaving the flag as the placeholder', async () => {

@@ -5,10 +5,6 @@ import { useScrollLock } from '@/composables/useScrollLock'
 /**
  * Thin wrapper over the native `<dialog>` element.
  *
- * `showModal()` already provides the focus trap, Escape handling, the top layer,
- * an inert background and `::backdrop` — so no dialog library is needed, and the
- * wrapper stays smaller than one would be.
- *
  * The one thing `<dialog>` does not do is stop the page behind it from scrolling,
  * so it takes the shared scroll lock while open.
  */
@@ -59,13 +55,6 @@ function onClick(event: MouseEvent) {
 </template>
 
 <style scoped>
-/*
- * Mobile first: full screen.
- *
- * `inset: 0` rather than `margin: 0` — a dialog is centred by auto margins, and
- * zeroing them alone pinned it to the top edge. `dvh` follows the browser's own
- * chrome as it hides and reappears.
- */
 .modal {
   inset: 0;
   width: 100vw;
@@ -74,7 +63,6 @@ function onClick(event: MouseEvent) {
   max-height: 100dvh;
   margin: 0;
   padding: 0;
-  /* The dialog itself never scrolls; one child does. See `.modal__body`. */
   overflow: hidden;
   border: 0;
   border-radius: 0;
@@ -83,10 +71,6 @@ function onClick(event: MouseEvent) {
   box-shadow: var(--shadow-overlay);
 }
 
-/*
- * Only applied while open. A bare `display: flex` would override the UA's
- * `dialog:not([open]) { display: none }` and leave a closed dialog on the page.
- */
 .modal[open] {
   display: flex;
 }
@@ -97,10 +81,6 @@ function onClick(event: MouseEvent) {
 }
 
 /*
- * A flex column that does not scroll. The content decides which single part of
- * itself is scrollable — for ship details that is the description — so the dialog
- * never shows a scrollbar around its own chrome.
- *
  * `min-height: 0` is what allows that child to shrink below its content height;
  * without it a flex item refuses to and the overflow moves back up here.
  */
@@ -137,16 +117,6 @@ function onClick(event: MouseEvent) {
  * Full screen on a phone. `inset: 0` rather than `margin: 0`: a dialog is centred
  * by auto margins, and zeroing them alone pinned it to the top edge. `dvh` follows
  * the browser's own chrome as it hides and reappears.
- */
-/*
- * Wide screens: a window again, centred in the viewport.
- *
- * The insets stay at 0 and the centring comes from `margin: auto`. `inset: auto`
- * looks like the way to undo a full-screen dialog, but it is what breaks it: the
- * user agent centres a modal dialog by pinning all four insets to 0 and letting auto
- * margins distribute the slack, so removing the insets left the dialog in its static
- * position against the top-right corner. `height: fit-content` is needed for the same
- * reason — with both block insets at 0, an `auto` height would stretch to fill.
  */
 @media (min-width: 720px) {
   .modal {

@@ -9,13 +9,11 @@ import { useCatalogStore } from '@/stores/catalog'
 import { useFiltersStore } from '@/stores/filters'
 
 /**
- * Filter panel: nations, types and tiers as pressable tiles, mirroring the
- * in-game port filter rather than a column of checkboxes.
+ * Filter panel: nations, types and tiers as pressable tiles.
  *
  * On narrow screens the panel collapses into a native `<details>` disclosure —
  * accessible and keyboard-operable with no JavaScript breakpoint involved.
  */
-/** Matches the single layout breakpoint in the stylesheets; see styles/breakpoints.md. */
 const WIDE_BREAKPOINT = 720
 
 const catalog = useCatalogStore()
@@ -24,18 +22,13 @@ const filters = useFiltersStore()
 /**
  * The one JavaScript breakpoint in the app, and an unavoidable one: whether a
  * `<details>` starts open is a DOM attribute, not a style, so CSS cannot decide it.
- *
- * On a phone the panel is a full-screen sheet, and a page that opens with its
- * filters covering the ships is the wrong first impression — so it starts closed
- * there and open on a wider screen.
  */
 const isWide = useMinWidth(WIDE_BREAKPOINT).matches
 const isOpen = ref(isWide.value)
 
 /**
  * While the sheet covers the screen the page behind it must not scroll; the sheet
- * scrolls on its own. On a wide screen the panel is part of the page, so it takes no
- * lock.
+ * scrolls on its own.
  */
 useScrollLock(computed(() => isOpen.value && !isWide.value))
 
@@ -58,7 +51,6 @@ const resultLabel = computed(() => {
     @toggle="isOpen = ($event.target as HTMLDetailsElement).open"
   >
     <summary class="filters__summary">
-      <!-- Rotates with [open], so the disclosure state is visible, not inferred. -->
       <svg class="filters__chevron" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
         <path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" />
       </svg>
@@ -133,7 +125,6 @@ const resultLabel = computed(() => {
       </fieldset>
 
       <div class="filters__footer">
-        <!-- Two boolean filters, so two switches rather than one of each kind. -->
         <ToggleSwitch v-model="filters.premiumOnly" label="Premium only" />
         <ToggleSwitch v-model="filters.showHidden" label="Test and event hulls" />
 
@@ -153,12 +144,6 @@ const resultLabel = computed(() => {
 </template>
 
 <style scoped>
-/*
- * Mobile first: closed, the panel sticks to the top of the viewport, so the filters
- * stay one tap away however far the list has been scrolled. Open, it takes the whole
- * screen and scrolls on its own — at 320px the panel is taller than the viewport,
- * and a full-screen sheet is the familiar shape for that.
- */
 .filters {
   position: sticky;
   top: 0;
@@ -261,8 +246,6 @@ const resultLabel = computed(() => {
   gap: var(--space-2);
 }
 
-/* Square box with `contain`: the API's tiny flag is a 54x54 canvas, so a 3:2 box
-   squashed it. */
 .filters__flag {
   width: 22px;
   height: 22px;

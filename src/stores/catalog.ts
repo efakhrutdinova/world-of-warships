@@ -2,9 +2,7 @@
  * Owns the catalogue: loading, failure state, and the lazily fetched details.
  *
  * A store rather than a module-level composable so that the data layer has one
- * explicit owner. The previous iteration of this project kept the same state in
- * two unused composables plus a copy inside the root component; a store makes
- * that split impossible.
+ * explicit owner.
  */
 import { defineStore } from 'pinia'
 import { computed, ref, shallowRef } from 'vue'

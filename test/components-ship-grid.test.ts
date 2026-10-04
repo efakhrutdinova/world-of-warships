@@ -1,8 +1,3 @@
-/**
- * The grid answers the assignment's performance requirement, so the behaviour is
- * asserted rather than assumed: the whole result is represented, while only a
- * window of it exists in the document.
- */
 import { flushPromises, mount } from '@vue/test-utils'
 import { describe, expect, it, vi } from 'vitest'
 import ShipGrid from '@/components/ShipGrid.vue'

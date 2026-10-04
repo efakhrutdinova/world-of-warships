@@ -1,6 +1,6 @@
 /**
  * The fallback path is what the task's "if the vortex service is unavailable"
- * criterion comes down to, so it is asserted as behaviour, not documented only.
+ * criterion comes down to, so it is asserted as behaviour.
  */
 import { describe, expect, it, vi } from 'vitest'
 import { loadCatalog, loadShipDetail, loadSnapshotDetails } from '@/api/catalog'

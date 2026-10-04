@@ -7,10 +7,6 @@
  * next `ShipCard` for that ship is a fresh component that starts out knowing
  * nothing — it would hide its artwork again and replay the fade-in, which reads as
  * the ship reloading on every scroll back.
- *
- * A set of URLs outside the component lifecycle fixes that: a card whose artwork
- * has been shown once renders it immediately and without a transition, whatever
- * the scroll state. Roughly 1000 short strings at worst.
  */
 const shown = new Set<string>()
 

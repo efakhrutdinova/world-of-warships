@@ -74,14 +74,9 @@ watch(
   <AppModal :open="ship !== null" :label="ship?.name ?? 'Ship details'" @close="emit('close')">
     <div v-if="ship" class="details">
       <div class="details__art">
-        <!--
-          The ship artwork is two thirds transparent, so it needs something behind
-          it. A sea-and-sky plate is what the game puts there; 17 KB of WebP for a
-          1920x1080 gradient, which is why it needs no responsive variants.
-        -->
         <img :src="seaSkyDay" alt="" class="details__sky" loading="lazy" decoding="async" />
         <img v-if="artwork" :src="artwork" :alt="ship.name" class="details__image" />
-        <!-- Flag, tier, class, name — one row, reading left to right. -->
+        <!-- Flag, tier, class, name — one row -->
         <div class="details__heading">
           <img v-if="nation?.flag" :src="nation.flag" alt="" class="details__flag" />
           <span class="details__tier" :class="`details__tier--${variant}`">{{ tier }}</span>
@@ -112,11 +107,6 @@ watch(
 </template>
 
 <style scoped>
-/*
- * The dialog is a flex column and so is this: artwork and facts keep their natural
- * height, and the description takes what is left and scrolls inside it. That keeps
- * the scrollbar off the dialog as a whole, where it appeared on tall layouts.
- */
 .details {
   display: flex;
   flex: 1;
@@ -124,11 +114,6 @@ watch(
   min-height: 0;
 }
 
-/*
- * Mobile first, where the dialog is full screen: the artwork takes whatever height
- * the facts and the description leave. A short description used to leave a large
- * empty band at the bottom of a tall phone; now that space goes to the ship.
- */
 .details__art {
   position: relative;
   flex: 1 1 auto;
@@ -136,7 +121,6 @@ watch(
   background: var(--surface-sunken);
 }
 
-/* The sea plate fills the frame; the ship sits on top of it. */
 .details__sky {
   position: absolute;
   inset: 0;
@@ -145,10 +129,6 @@ watch(
   object-fit: cover;
 }
 
-/*
- * `contain`, not `cover`. The artwork is 435x256 and the frame is 16:9, so `cover`
- * cropped the bow and stern off every ship.
- */
 .details__image {
   position: relative;
   display: block;
@@ -169,11 +149,6 @@ watch(
   background: linear-gradient(to top, rgb(0 0 0 / 85%), transparent);
 }
 
-/*
- * A square box with `contain`, not a 28x19 one. The API's `tiny` flag is a 54x54
- * canvas with the flag occupying 54x34 inside it, so forcing a 3:2 box squashed the
- * artwork; letting it fit a square keeps its 1.59 ratio and renders about 30x19.
- */
 .details__flag {
   width: 30px;
   height: 30px;
@@ -203,10 +178,6 @@ watch(
   height: 26px;
 }
 
-/*
- * Sized with the flag, tier and class icon rather than above them: the four parts
- * of the heading now read as one line of roughly equal weight.
- */
 .details__name {
   font-size: 20px;
   line-height: 1.2;
@@ -217,8 +188,6 @@ watch(
   top: var(--space-3);
   /* Clear of the close button: its 32px plus a gap on either side. */
   right: calc(32px + var(--space-2) * 2);
-  /* Centred by flex rather than by padding: the uppercase font's metrics left the
-     text sitting high in the plate. */
   display: inline-flex;
   align-items: center;
   min-height: 20px;
@@ -238,10 +207,6 @@ watch(
   background: var(--hull-special);
 }
 
-/*
- * Mobile first: one row, however many facts there are. The values are short, so
- * `auto-fit` with a 140px floor wrapped them for no reason at 320px.
- */
 .details__facts {
   display: grid;
   flex: none;
@@ -253,17 +218,12 @@ watch(
   border-bottom: 1px solid var(--border-subtle);
 }
 
-/*
- * Wide screens: the dialog is a window with a bounded height, so the description
- * takes the remainder and the artwork returns to a fixed 16:9 frame.
- */
 @media (min-width: 720px) {
   .details__art {
     flex: none;
   }
 
   .details__image {
-    /* Capped so a short viewport still leaves room for the facts and description. */
     height: auto;
     max-height: 46dvh;
     aspect-ratio: 16 / 9;
@@ -299,11 +259,6 @@ watch(
   font-size: 13px;
 }
 
-/*
- * The only scrollable part of the dialog. On a phone it takes the height its text
- * needs, up to a cap, and the artwork above absorbs the rest; the type is a step
- * larger there because a full-screen sheet gives it the room.
- */
 .details__description {
   flex: 0 1 auto;
   max-height: 42dvh;

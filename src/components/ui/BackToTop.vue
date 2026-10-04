@@ -4,9 +4,6 @@ import { useWindowScroll } from '@/composables/useWindowScroll'
 
 /**
  * Returns to the top of the list.
- *
- * With a thousand ships a reader can end up a long way down, and the filter panel
- * lives at the top. Appears only once there is something to scroll back from.
  */
 const { y } = useWindowScroll()
 

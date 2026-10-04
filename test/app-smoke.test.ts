@@ -2,7 +2,7 @@
  * End-to-end smoke test in place of a manual browser pass: boots the real app
  * shell with the real router and stores, and fails if anything reaches
  * `console.error` — the task's "no console errors" requirement, checked
- * automatically rather than promised.
+ * automatically.
  */
 import { mount, flushPromises } from '@vue/test-utils'
 import { createMemoryHistory, createRouter } from 'vue-router'

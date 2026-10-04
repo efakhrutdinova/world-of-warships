@@ -1,5 +1,3 @@
-/** Domain model: what components consume. Free of API quirks. */
-
 export const SHIP_TYPE_IDS = [
   'Submarine',
   'Destroyer',

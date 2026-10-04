@@ -4,8 +4,7 @@ import { afterEach, vi } from 'vitest'
  * happy-dom has no ResizeObserver, which the virtualized grid measures with.
  *
  * The stub reports a plausible container width as a real one would, because the
- * grid deliberately renders nothing until it has a measurement — see
- * `ShipGrid`'s `isMeasured`. A no-op stub would leave every grid empty.
+ * grid deliberately renders nothing until it has a measurement. A no-op stub would leave every grid empty.
  */
 const STUB_WIDTH = 1200
 

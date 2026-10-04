@@ -1,6 +1,5 @@
 /**
- * Component-level check that the filter UI is actually wired to the result set —
- * the connection a store-only test cannot prove.
+ * Component-level check that the filter UI is actually wired to the result set.
  */
 import { render, screen } from '@testing-library/vue'
 import userEvent from '@testing-library/user-event'

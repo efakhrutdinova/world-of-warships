@@ -1,21 +1,6 @@
-/**
- * Design tokens taken from the World of Warships portal stylesheets
- * (wows-web-static.wgcdn.co/wowsp/.../redesign/common.css and pc-browser.css):
- * Roboto / Roboto Condensed, a dark base, gold as the primary accent, teal for
- * interactive text, orange for warnings. Container widths follow the portal's
- * breakpoint steps.
- */
 :root {
   --font-body: Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-display: 'Roboto Condensed', 'Arial Narrow', var(--font-body);
-
-  /*
-   * Steel blue-grey, the family the game's own interface uses. Built around
-   * #51809e: hue 203-205 throughout, saturation 28-32%, surfaces stepped by
-   * lightness. Contrast of every text-on-surface pair is checked by
-   * `test/styles-contrast.test.ts`, so a palette edit cannot quietly drop below
-   * WCAG AA.
-   */
 
   /* Surfaces, darkest to lightest. */
   --surface-sunken: #22333f;
@@ -40,19 +25,9 @@
   --accent-gold: #eec568;
   --accent-orange: #f56914;
 
-  /* Breakpoints: mobile-first, `min-width` only. 720px for layout, 1700px for the
-     container. See ARCHITECTURE.md section 5.6. */
-
-  /* Hull classes, as the port colours them. */
   --hull-premium: #eec568;
   --hull-special: #21c3b9;
 
-  /*
-   * Sampled from the API's own class icons: the standard and elite variants are
-   * #eeeeee, the premium variant #eebe5f, and the special variant is the same gold
-   * family. The tier numeral is coloured from these so it matches the icon beside
-   * it.
-   */
   --hull-mark-standard: #eeeeee;
   --hull-mark-premium: #eec568;
 

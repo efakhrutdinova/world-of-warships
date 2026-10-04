@@ -8,7 +8,7 @@ import { SHIP_TYPE_IDS, type ShipTypeId } from '@/types/ship'
  *
  * The URL is the shareable form of a filtered view, and it survives a reload.
  * Writes use `replace` so that adjusting a filter does not fill the history
- * stack — only navigating to a ship pushes an entry.
+ * stack.
  */
 const KEYS = {
   search: 'q',

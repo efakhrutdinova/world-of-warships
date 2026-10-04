@@ -5,8 +5,7 @@ import { onMounted, onScopeDispose, ref } from 'vue'
  *
  * Updates are coalesced into one read per animation frame: a scroll event can fire
  * many times per frame, and reading `scrollY` in each of them would force layout
- * repeatedly during exactly the gesture this project has spent effort keeping
- * smooth.
+ * repeatedly.
  */
 export function useWindowScroll() {
   const y = ref(0)

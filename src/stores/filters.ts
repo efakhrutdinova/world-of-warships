@@ -22,9 +22,6 @@ export const useFiltersStore = defineStore('filters', () => {
   const tiers = ref<number[]>([])
   /** Test and event hulls the in-game catalogue omits; off by default. */
   const showHidden = ref(false)
-  /** Narrows the result to premium hulls. A toggle, not a tri-state: the inverse
-      ("tech tree only") is already reachable by leaving it off and reading the
-      class icons. */
   const premiumOnly = ref(false)
 
   const activeCount = computed(
